@@ -25,10 +25,7 @@ public:
                 x--;
             }
             pointCounterMap[{x,y}]++;
-        }
-        for(auto& point : pointCounterMap)
-        {
-            if(point.second > 1)
+            if(pointCounterMap[{x,y}] > 1)
             {
                 crossingPathFlag = true;
                 break;
