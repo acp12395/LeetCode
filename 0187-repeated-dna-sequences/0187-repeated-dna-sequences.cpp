@@ -27,16 +27,16 @@ public:
                 {
                     auto range = hashIndexesMap.equal_range((*mapIt).first);
                     unordered_set<string> repeatedStringsDetector;
-                    unordered_set<string> uniqueStringsSet;
+                    unordered_set<string> repeatedStringsSet;
                     for(auto& index = range.first; index != range.second; index++)
                     {
                         string str = s.substr((*index).second,10);
                         if(!(repeatedStringsDetector.insert(str).second))
                         {
-                            uniqueStringsSet.insert(str);
+                            repeatedStringsSet.insert(str);
                         }
                     }
-                    for(auto& str : uniqueStringsSet)
+                    for(auto& str : repeatedStringsSet)
                     {
                         retVec.push_back(str);
                     }
