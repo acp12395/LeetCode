@@ -26,7 +26,7 @@ public:
             retVal &= (storageStack.top() == itNode->val);
             storageStack.pop();
             itNode = itNode->next;
-        }while(itNode != nullptr);
+        }while(itNode != nullptr && retVal);
         return retVal;
     }
 };
