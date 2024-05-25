@@ -21,12 +21,9 @@ private:
             {
                 vector<string> nextRemainingStringResult =
                     wordBreakHelper(remainingString.substr(i),wordDict,memo);
-                for(auto& element : nextRemainingStringResult)
+                for(const string& nextString : nextRemainingStringResult)
                 {
-                    string resultString = currSubstring;// +
-                    resultString.append(element == "" ? "" : " ");
-                    resultString.append(element);
-                    resultStrings.push_back(resultString);
+                    resultStrings.push_back(currSubstring + (nextString == "" ? "" : " ") + nextString);
                 }
             }
         }
