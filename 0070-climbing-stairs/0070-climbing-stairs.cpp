@@ -1,17 +1,24 @@
 class Solution {
 private:
-    unordered_map<int, int> memo;
+    map<int, int> stepsWaysMap;
 public:
     int climbStairs(int n) {
-        if(n == 0 || n == 1)
+        if(n == 1)
         {
             return 1;
         }
-        if(memo.contains(n))
+        else if(n == 2)
         {
-            return memo[n];
+            return 2;
         }
-        memo[n] = climbStairs(n - 1) + climbStairs(n - 2);
-        return memo[n];
+        else
+        {
+            if(stepsWaysMap.count(n) == 1)
+            {
+                return stepsWaysMap[n];
+            }
+            stepsWaysMap[n] = (climbStairs(n - 2)) + (climbStairs(n - 1));
+            return stepsWaysMap[n];
+        }
     }
 };
