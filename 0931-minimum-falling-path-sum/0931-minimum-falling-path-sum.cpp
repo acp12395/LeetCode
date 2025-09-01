@@ -1,50 +1,38 @@
 class Solution {
-private:
-    void minFallingPathSumHelper(vector<vector<int>>& matrix, int row = 0)
+private: 
+    int minFallingPathSumHelper(vector<vector<int>>& matrix, vector<vector<int>>& minPathSumMatrix, pair<int,int> coord)
     {
-        if(row != matrix.size() - 1)
+        if(coord.first == matrix.size() - 1)
         {
-            minFallingPathSumHelper(matrix, row + 1);
+            minPathSumMatrix[coord.first][coord.second] = matrix[coord.first][coord.second];
         }
-        int cellNo = row * matrix.size();
-        for(int numberIndex = 0; numberIndex < matrix.size(); numberIndex++)
+        else if(minPathSumMatrix[coord.first][coord.second] == INT_MAX)
         {
-            pathSumMap[cellNo] = matrix[row][numberIndex];
-            if(row != matrix.size() - 1)
+            int downLeft = INT_MAX;
+            int down = minFallingPathSumHelper(matrix, minPathSumMatrix, {coord.first + 1, coord.second});
+            int downRight = INT_MAX;
+            if(coord.second > 0)
             {
-                int belowL, below, belowR;
-                below = pathSumMap[cellNo + matrix.size()];
-                if(numberIndex == 0)
-                {
-                    belowR = pathSumMap[cellNo + matrix.size() + 1];
-                    pathSumMap[cellNo] += (below < belowR ? below : belowR);
-                }
-                else if(numberIndex == matrix.size() - 1)
-                {
-                    belowL = pathSumMap[cellNo + matrix.size() - 1];
-                    pathSumMap[cellNo] += (below < belowL ? below : belowL);
-                }
-                else
-                {
-                    belowR = pathSumMap[cellNo + matrix.size() + 1];
-                    belowL = pathSumMap[cellNo + matrix.size() - 1];
-                    int belowMin = (below < belowL ? below : belowL);
-                    belowMin = (belowMin < belowR ? belowMin : belowR);
-                    pathSumMap[cellNo] += belowMin;
-                }
+                downLeft = minFallingPathSumHelper(matrix, minPathSumMatrix, {coord.first + 1, coord.second - 1});
             }
-            cellNo++;
+            if(coord.second < matrix.size() - 1)
+            {
+                downRight = minFallingPathSumHelper(matrix, minPathSumMatrix, {coord.first + 1, coord.second + 1});
+            }
+            int minVal = min(down, downLeft);
+            minVal = min(minVal, downRight);
+            minPathSumMatrix[coord.first][coord.second] = matrix[coord.first][coord.second] + minVal;
         }
+        return minPathSumMatrix[coord.first][coord.second];
     }
-    unordered_map<int, int> pathSumMap;
 public:
     int minFallingPathSum(vector<vector<int>>& matrix) {
-        int retVal = INT_MAX;
-        minFallingPathSumHelper(matrix);
-        for(int i = 0; i < matrix.size(); i++)
+        int minVal = INT_MAX;
+        vector<vector<int>> minPathSumMatrix(matrix.size(), vector<int>(matrix.size(), INT_MAX));
+        for(int index = 0; index < matrix.size(); index++)
         {
-            retVal = retVal < pathSumMap[i] ? retVal : pathSumMap[i];
+            minVal = min(minVal, minFallingPathSumHelper(matrix, minPathSumMatrix, {0, index}));
         }
-        return retVal;
+        return minVal;
     }
 };
