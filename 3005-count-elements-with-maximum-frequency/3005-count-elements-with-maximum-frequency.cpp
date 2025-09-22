@@ -1,24 +1,25 @@
 class Solution {
 public:
     int maxFrequencyElements(vector<int>& nums) {
-        unordered_map<int,int> elemFreqMap;
+        unordered_map<int,int> numFreqMap;
         for(auto& num : nums)
         {
-            elemFreqMap[num]++;
+            numFreqMap[num]++;
         }
-        pair<int,int> maxFreqCountPair = {0,0};
-        for(auto& [_,freq] : elemFreqMap)
+        unordered_set<int> maxFreqElements;
+        int maxFreq = 0;
+        for(auto& [num,freq] : numFreqMap)
         {
-            if(freq > maxFreqCountPair.first)
+            if(freq > maxFreq)
             {
-                maxFreqCountPair.first = freq;
-                maxFreqCountPair.second = 1;
+                maxFreq = freq;
+                maxFreqElements.clear();
             }
-            else if(freq == maxFreqCountPair.first)
+            if(freq == maxFreq)
             {
-                maxFreqCountPair.second++;
+                maxFreqElements.insert(num);
             }
         }
-        return maxFreqCountPair.first * maxFreqCountPair.second;
+        return maxFreq*maxFreqElements.size();
     }
 };
