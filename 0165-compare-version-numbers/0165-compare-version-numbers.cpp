@@ -1,67 +1,49 @@
 class Solution {
 public:
     int compareVersion(string version1, string version2) {
-        int ptr1_l = 0, ptr2_l = 0, ptr1_r = 0, ptr2_r = 0;
-        int comparison = 0;
-        while(ptr1_r <= version1.size() && ptr2_r <= version2.size())
+        int index1 = 0;
+        int index2 = 0;
+        while(index1 < version1.size() && index2 < version2.size() && index1 != string::npos && index2 != string::npos)
         {
-            if((ptr1_r < version1.size() && version1[ptr1_r] == '.') && (ptr2_r < version2.size() && version2[ptr2_r] == '.') || ptr1_r == version1.size() && ptr2_r == version2.size() || (ptr1_r < version1.size() && version1[ptr1_r] == '.') && ptr2_r == version2.size() || (ptr2_r < version2.size() && version2[ptr2_r] == '.') && ptr1_r == version1.size())
+            string::size_type point1 = version1.find(".", index1);
+            string::size_type point2 = version2.find(".", index2);
+            if(point1 == string::npos)
             {
-                size_t pos;
-                int rev1 = stoi(version1.substr(ptr1_l, ptr1_r - ptr1_l), &pos);
-                int rev2 = stoi(version2.substr(ptr2_l, ptr2_r - ptr2_l), &pos);
-                if(rev1 < rev2)
-                {
-                    comparison = -1;
-                    break;
-                }
-                else if(rev1 > rev2)
-                {
-                    comparison = 1;
-                    break;
-                }
-                else
-                {
-                    if((ptr1_r < version1.size() && version1[ptr1_r] == '.') && ptr2_r == version2.size())
-                    {
-                        for(; ptr1_r < version1.size(); ptr1_r++)
-                        {
-                            if(!(version1[ptr1_r] == '.' || version1[ptr1_r] == '0'))
-                            {
-                                comparison = 1;
-                            }
-                        }
-                        break;
-                    }
-                    else if((ptr2_r < version2.size() && version2[ptr2_r] == '.') && ptr1_r == version1.size())
-                    {
-                        for(; ptr2_r < version2.size(); ptr2_r++)
-                        {
-                            if(!(version2[ptr2_r] == '.' || version2[ptr2_r] == '0'))
-                            {
-                                comparison = -1;
-                            }
-                        }
-                        break;
-                    }
-                }
-                ptr1_l = ptr1_r + 1;
-                ptr2_l = ptr2_r + 1;
-                ptr1_r++;
-                ptr2_r++;
+                point1 = static_cast<string::size_type>(version1.size());
             }
-            else
+            if(point2 == string::npos)
             {
-                if(ptr1_r < version1.size() && version1[ptr1_r] != '.')
-                {
-                    ptr1_r++;
-                }
-                if(ptr2_r < version2.size() && version2[ptr2_r] != '.')
-                {
-                    ptr2_r++;
-                }
+                point2 = static_cast<string::size_type>(version2.size());
+            }
+            int rev1 = stoi(version1.substr(index1, static_cast<int>(point1 - index1)));
+            int rev2 = stoi(version2.substr(index2, static_cast<int>(point2 - index2)));
+            if(rev1 < rev2)
+            {
+                return -1;
+            }
+            else if(rev1 > rev2)
+            {
+                return 1;
+            }
+            index1 = static_cast<int>(point1) + 1;
+            index2 = static_cast<int>(point2) + 1;
+        }
+        for(; index1 < version1.size(); index1++)
+        {
+            char character = version1[index1];
+            if(character != '.' && character != '0')
+            {
+                return 1;
             }
         }
-        return comparison;
+        for(; index2 < version2.size(); index2++)
+        {
+            char character = version2[index2];
+            if(character != '.' && character != '0')
+            {
+                return -1;
+            }
+        }
+        return 0;
     }
 };
